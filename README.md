@@ -66,4 +66,4 @@ CVE-2011-1502 - 中
 
 ## Sample - v3
 
-![1569552990024](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1569552990024.png)
+![image](https://raw.githubusercontent.com/starnightcyber/vul-info-collect/master/pic.png)
