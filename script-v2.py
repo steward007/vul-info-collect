@@ -58,22 +58,23 @@ def fetch_all_cves(producer, software, banner):
     return url
 
 
-def fetch_severity(CVE):
+def fetch_severity(index, total, CVE):
     url = 'https://nvd.nist.gov/vuln/detail/{}'.format(CVE)
-    print(url)
+    info = '[{} / {}] {}'.format(index, total, url)
+    print(info)
 
     try:
         resp = requests.get(url, timeout=5, headers=headers)
         if resp.status_code == 200:
             content = resp.text
-            severity = re.findall('"vuln-cvssv3-base-score-severity">(.*)?</span>', content)
-            if severity.__len__() == 0:
-                severity = re.findall('"vuln-cvssv2-base-score-severity">(.*)?</span>', content)
-            # print(severity[0])
-            cve_level = level_dict[severity[0]]
+            severity = re.findall('"vuln-cvss3-panel-score">(.*)?</a>', content)
+            # print(severity)
+
+            score, cve_level, _ = severity[0].split(' ')
             cve_obj[CVE] = cve_level
             print(cve_level)
     except:
+        print('something bad happen...')
         pass
     pass
 
@@ -87,19 +88,22 @@ def fetch_vul_info():
 
             url = fetch_all_cves(producer, software, banner)
 
+            index = 0
+            total = len(cve_all)
             for CVE in cve_all:
-                fetch_severity(CVE)
+                index += 1
+                fetch_severity(index, total, CVE)
 
             print(len(cve_obj))
             a = b = c = d = e = 0
             for k, v in cve_obj.items():
-                if v == '严重':
+                if v == 'CRITICAL':
                     a += 1
-                elif v == '高':
+                elif v == 'HIGH':
                     b += 1
-                elif v == '中':
+                elif v == 'MEDIUM':
                     c += 1
-                elif v == '低':
+                elif v == 'LOW':
                     d += 1
                 else:
                     e += 1
@@ -109,7 +113,7 @@ def fetch_vul_info():
             print(query_str)
             print(vuls_info)
 
-            with open('result.txt', 'a+', encoding='utf-8') as fw:
+            with open('result-v2.txt', 'a+', encoding='utf-8') as fw:
                 fw.write(query_str)
                 fw.write(url)
                 fw.write('\n')
