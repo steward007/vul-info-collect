@@ -62,28 +62,19 @@ def fill_with_nvd(cve, cve_obj):
     try:
         print(url)
         response = requests.get(url, headers=headers, timeout=60)
-        print(response.status_code)
+        # print(response.status_code)
         if response.status_code == 200:
-
-            # to get vul description
-            # description = re.findall('"vuln-analysis-description">(.*) ', response.text)
-            # print(response.text)
-            description = re.findall('<p data-testid="vuln-analysis-description">(.*).</p>?', response.text)
+            # fill description
+            content = response.text
+            description = re.findall('<p data-testid="vuln-description">(.*).</p>?', content)
             cve_obj.cve_description = description[0]
 
-            # to get vul score
-            score = re.findall('"vuln-cvssv3-base-score">(.*)? </span>', response.text)
-            if score.__len__() == 0:
-                score = re.findall('"vuln-cvssv2-base-score">(.*)? </span>', response.text)
-            print(score[0])
-            cve_obj.cve_score = score[0]
-
-            # to get vul level
-            severity = re.findall('"vuln-cvssv3-base-score-severity">(.*)?</span>', response.text)
-            if severity.__len__() == 0:
-                severity = re.findall('"vuln-cvssv2-base-score-severity">(.*)?</span>', response.text)
-            print(severity[0])
-            cve_obj.cve_level = level_dict[severity[0]]
+            # fill level and score
+            severity = re.findall('"vuln-cvss3-panel-score">(.*)?</a>', content)
+            score, cve_level, _ = severity[0].split(' ')
+            cve_obj.cve_score = score
+            cve_obj.cve_level = cve_level
+            print(score, cve_level)
     except:
         print('something bad happen when searching nvd...')
     finally:
@@ -233,13 +224,13 @@ def write2html():
 
     a = b = c = d = e = 0
     for cve in cve_obj_list:
-        if cve.cve_level == '严重':
+        if cve.cve_level == 'CRITICAL':
             a += 1
-        elif cve.cve_level == '高':
+        elif cve.cve_level == 'HIGH':
             b += 1
-        elif cve.cve_level == '中':
+        elif cve.cve_level == 'MEDIUM':
             c += 1
-        elif cve.cve_level == '低':
+        elif cve.cve_level == 'LOW':
             d += 1
         else:
             e += 1
