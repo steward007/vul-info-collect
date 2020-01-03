@@ -6,6 +6,12 @@
 
 ## Sample - v2
 
+update:2020.1.3
+
+获取某个软件版本的漏洞总览信息，包括：漏洞个数，严重、高危、中危、低危漏洞个数，及CVE的漏洞等级情况。
+
+A script to get vulnerabilities of specific software version, which contains vul number, vul level and CVE no vul level.
+
 ```
 PS E:\PycharmProjects\vul-info-collect> python3 .\script-v2.py
 apache:http_server:2.4.38
@@ -66,4 +72,16 @@ CVE-2011-1502 - 中
 
 ## Sample - v3
 
+update:2020.1.3
+
+获取某个软件版本的漏洞总览信息，包括：漏洞个数，严重、高危、中危、低危漏洞个数，漏洞描述等必要信息，及CVE的漏洞等级情况，并以html的形式展现。
+
+A script to get vulnerabilities of specific software version, which contains vul number, vul level, vul description, and CVE no vul level, and present with html.
+
 ![image](https://raw.githubusercontent.com/starnightcyber/vul-info-collect/master/pic.png)
+
+## Sample - v1
+
+update: outdated
+
+link: https://github.com/starnightcyber/scripts/tree/master/vul-info-collect
